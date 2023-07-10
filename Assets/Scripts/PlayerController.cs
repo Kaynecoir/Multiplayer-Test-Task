@@ -2,16 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerManager))]
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] private Transform player;
-	[SerializeField] private Transform orientation;
-	[SerializeField] private Transform playerObj;
+	// Player Field
+	private PlayerManager playerManager;
+	private Transform player;
+	private Transform playerObj;
+
+	// Controller Field
 	[SerializeField] private Joystick joysticToMove;
 	[SerializeField] private Joystick joysticToView;
 
 	public float playerMovingSpeed;
-	//public float playerRotarionSpeed;
+
+	private void Start()
+	{
+		playerManager = GetComponent<PlayerManager>();
+		player = playerManager.player;
+	}
 
 	private void Update()
 	{
