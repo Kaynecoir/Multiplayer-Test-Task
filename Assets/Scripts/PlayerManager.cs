@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+	public string playerName;
+	public Color playerColor;
+
 	public Transform player;
 	public Transform playerObj;
 	public Health health;

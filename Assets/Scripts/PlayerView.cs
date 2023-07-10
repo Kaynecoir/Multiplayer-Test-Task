@@ -13,6 +13,7 @@ public class PlayerView : MonoBehaviour
     void Start()
     {
         playerManager = GetComponent<PlayerManager>();
+        playerManager.playerObj.GetComponent<SpriteRenderer>().color = playerManager.playerColor;
     }
 
     void Update()
