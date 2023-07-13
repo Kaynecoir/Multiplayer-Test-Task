@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
+	private NetworkVariable<int> networkVariable = new NetworkVariable<int>(1, 
+		NetworkVariableReadPermission.Everyone, 
+		NetworkVariableWritePermission.Owner);
+
 	public string playerName;
 	public Color playerColor;
 
@@ -14,7 +19,7 @@ public class PlayerManager : MonoBehaviour
 
 	private void Start()
 	{
-		health.Death += MeDestroy;
+		if (health != null)	health.Death += MeDestroy;
 
 	}
 

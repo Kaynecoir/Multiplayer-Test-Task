@@ -6,13 +6,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	// Player Field
-	private PlayerManager playerManager;
+	public PlayerManager playerManager;
 	private Transform player;
-	private Transform playerObj;
+	public Transform playerObj { get; private set; }
 
 	// Controller Field
-	[SerializeField] private Joystick joysticToMove;
-	[SerializeField] private Joystick joysticToView;
+	public Joystick joysticToMove;
+	public Joystick joysticToView;
 
 	public float playerMovingSpeed;
 
@@ -22,13 +22,16 @@ public class PlayerController : MonoBehaviour
 		player = playerManager.player;
 	}
 
-	private void Update()
+	private void FixedUpdate()
 	{
-		Vector3 dir = joysticToMove.Direction;
+		if (!playerManager.IsOwner) return;
+
+		Vector3 dir = Vector3.zero;
+		if(joysticToMove != null) dir = joysticToMove.Direction;
 
 		player.position += dir * playerMovingSpeed;
 
-		if(joysticToView.Direction != Vector2.zero)
+		if(joysticToView != null && joysticToView.Direction != Vector2.zero)
 		{
 			float angle_rad = Mathf.Atan2(joysticToView.Vertical, joysticToView.Horizontal);
 			float angle_del = angle_rad / Mathf.PI * 180;

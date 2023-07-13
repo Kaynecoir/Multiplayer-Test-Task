@@ -18,7 +18,8 @@ public class PlayerView : MonoBehaviour
 
     void Update()
     {
-        healthBar.fillAmount = playerManager.health.AmountHealth;
-        coinText.text = playerManager.coinCount.ToString();
+        if (!playerManager.IsOwner) return;
+        if (healthBar != null) healthBar.fillAmount = playerManager.health.AmountHealth;
+        if (coinText != null) coinText.text = playerManager.coinCount.ToString();
     }
 }

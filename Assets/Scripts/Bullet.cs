@@ -11,11 +11,11 @@ public class Bullet : MonoBehaviour
 	{
 		collisionDamage.DamageObject += MeDestroy;
 	}
-	private void Update()
+	private void FixedUpdate()
 	{
 		transform.position += speed;
 		lifeTime -= Time.deltaTime;
-		if (lifeTime <= 0) Destroy(gameObject);
+		if (lifeTime <= 0) MeDestroy(gameObject);
 	}
 
 	private void MeDestroy(GameObject go)

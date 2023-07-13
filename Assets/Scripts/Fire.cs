@@ -2,19 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerController))]
 public class Fire : MonoBehaviour
 {
 	public GameObject fireObj;
 	public Transform posGenerate;
-	public Joystick joysticToView;
+	[SerializeField] private Joystick joysticToView;
+	[SerializeField] private PlayerController playerController;
 
 	public float fireSpeed;
 	float curFireSpeed = 0;
 	public float bulletSpeed;
 
-	private void Update()
+	private void Start()
 	{
-		if (joysticToView.Direction != Vector2.zero)
+		playerController = GetComponent<PlayerController>();
+		joysticToView = playerController.joysticToView;
+	}
+
+	private void FixedUpdate()
+	{
+		if (!playerController.playerManager.IsOwner) return;
+
+		if (joysticToView != null && joysticToView.Direction != Vector2.zero)
 		{
 			curFireSpeed -= Time.deltaTime;
 			if (curFireSpeed <= 0)
