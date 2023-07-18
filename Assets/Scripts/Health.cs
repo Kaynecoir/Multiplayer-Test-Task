@@ -5,8 +5,8 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
 	[SerializeField] private float maxHealth, curHealth;
-	public delegate void SimpleFunc();
-	public event SimpleFunc Death;
+	public delegate void VoidFunc();
+	public event VoidFunc Death;
 
 	public float CurrentHealth { get => curHealth; }
 	public float MaximumHealth { get => maxHealth; }

@@ -1,32 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Unity.Netcode;
+using UnityEngine;
 
 public class PlayerManager : NetworkBehaviour
 {
-	private NetworkVariable<int> networkVariable = new NetworkVariable<int>(1, 
-		NetworkVariableReadPermission.Everyone, 
-		NetworkVariableWritePermission.Owner);
-
-	public string playerName;
-	public Color playerColor;
-
+	[Header("PlayerObject")]
 	public Transform player;
 	public Transform playerObj;
+	public Canvas canvas;
 	public Health health;
-	public int coinCount;
+
+	[Header("PlayerAtribute")]
+	public float playerSpeed;
+	public string playerName;
+
+	public delegate void VoidFunc();
+	public event VoidFunc Frame;
+	public struct PositionStruct : INetworkSerializable
+	{
+		public float x;
+		public float y;
+		public float degZ;
+
+		public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+		{
+			serializer.SerializeValue(ref x);
+			serializer.SerializeValue(ref y);
+			serializer.SerializeValue(ref degZ);
+		}
+	}
+
+	public NetworkVariable<PositionStruct> networkVariable = new NetworkVariable<PositionStruct>(
+		new PositionStruct { x = 0, y = 0, degZ = 0, },
+		NetworkVariableReadPermission.Everyone,
+		NetworkVariableWritePermission.Owner);
 
 	private void Start()
 	{
-		if (health != null)	health.Death += MeDestroy;
-
+		Frame += SyncPosition;
+		health.Death += DestroyMeServerRpc;
+	}
+	private void Update()
+	{
+		Frame?.Invoke();
+	}
+	public void SyncPosition()
+	{
+		player.position = new Vector3(networkVariable.Value.x, networkVariable.Value.y);
+		player.rotation = Quaternion.Euler(0, 0, networkVariable.Value.degZ);
 	}
 
-
-
-	public void MeDestroy()
+	public void SetPosition(float new_x, float new_y, float new_degZ)
 	{
-		Destroy(player.gameObject);
+		networkVariable.Value = new PositionStruct { x = new_x, y = new_y, degZ = new_degZ, };
+	}
+	
+	[ServerRpc]
+	public void DestroyMeServerRpc()
+	{
+		GetComponent<NetworkObject>().Despawn(true);
 	}
 }
