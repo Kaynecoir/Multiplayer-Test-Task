@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+//using Unity.Services.
+using Unity.Services.Core;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviour
 {
-	public void LoadScene(string sceneName)
+	private async void Start()
 	{
-		SceneManager.LoadScene(sceneName);
+		await UnityServices.InitializeAsync();
+
+		//AuthenticationService
 	}
 }
